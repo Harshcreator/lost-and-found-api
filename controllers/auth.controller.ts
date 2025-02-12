@@ -57,10 +57,9 @@ export class AuthController {
 
             // Create safe user object without password
             const { _id, email: userEmail } = user;
-            const userResponse: Omit<IUser, 'password'> = {
-                _id,
-                email: userEmail
-            };
+            const userObject = user.toObject();
+            delete userObject.password;
+            const userResponse: Omit<IUser, 'password'> = userObject;
 
             const token = generateToken(user._id as Types.ObjectId);
             return res.status(201).json({
@@ -111,12 +110,11 @@ export class AuthController {
             }
 
             // Create safe user object without password
-            const userResponse = {
-                ...user.toObject(),
-                password: undefined
-            };
+            const userObject = user.toObject();
+            delete userObject.password;
+            const userResponse: Omit<IUser, 'password'> = userObject;
 
-            const token = generateToken(user._id);
+            const token = generateToken(user._id as Types.ObjectId);
             return res.status(200).json({
                 success: true,
                 data: {
